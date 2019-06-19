@@ -34,11 +34,13 @@ class LCDWIKI_TOUCH
 	uint8_t TP_Read_Coordinate2(uint16_t *x, uint16_t *y);
 	void TP_Set_Rotation(uint8_t val);
 	uint8_t TP_Get_Rotation(void) const;	
+	void LCD_Set_Rotation(uint8_t val);
+	uint8_t LCD_Get_Rotation(void) const;	
 	void TP_Set_State(uint8_t val);
 	uint8_t TP_Get_State(void) const;	
 	
 	uint16_t x0,y0,x,y,wid,heig;
-	uint8_t touch_statue,touch_rotation;	
+	uint8_t touch_statue,touch_rotation,lcd_rotation;	
   private:
  	#ifdef __AVR__
 		volatile uint8_t *tcsPort, *tclkPort, *tdoutPort, *tdinPort, *tirqPort;

@@ -39,6 +39,7 @@ LCDWIKI_TOUCH::LCDWIKI_TOUCH(int8_t tcs, int8_t tclk, int8_t tdout, int8_t tdin,
 #endif
 	touch_statue = 0 ;
 	touch_rotation = 0;	
+	lcd_rotation = 0;
 	wid = 0;
 	heig = 0;
 	x0=0;
@@ -54,7 +55,7 @@ void LCDWIKI_TOUCH::TP_Init(uint8_t r,uint16_t w, uint16_t h)
 	TCS_HIGH;
 	wid = w;
 	heig = h;
-	TP_Set_Rotation(r);
+	LCD_Set_Rotation(r);
 }
 
 void LCDWIKI_TOUCH::TP_Write_Byte(uint8_t data)
@@ -199,29 +200,116 @@ uint8_t LCDWIKI_TOUCH::TP_Scan(uint8_t mode)
 	   */
 			x=((long)XFAC*x)/10000+XOFFSET;
 		    y=((long)YFAC*y)/10000+YOFFSET;
-	 		if(touch_rotation == 0)
-	 		{
-				x = wid-x;
-			}
-			else if(touch_rotation == 1)
+			switch(touch_rotation)
 			{
-				uint16_t tmp;
-				tmp = x;
-				x=y;
-				y=tmp;
-			}
-			else if(touch_rotation == 2)
-			{
-				y = heig - y;
-			}
-			else if(touch_rotation == 3)
-			{
-				uint16_t tmp;
-				tmp = x;
-				x=y;
-				y=tmp;
-				x = wid-x;
-				y = heig - y;
+				case 0:
+					if(lcd_rotation == 0)
+					{
+						break;
+					}
+					else if(lcd_rotation == 1)
+					{
+						uint16_t tmp;
+						tmp = x;
+						x=y;
+						y=tmp;
+						y = heig - y;
+					}
+					else if(lcd_rotation == 2)
+					{
+						x = wid-x;
+						y = heig - y;
+					}
+					else if(lcd_rotation == 3)
+					{
+						uint16_t tmp;
+						tmp = x;
+						x=y;
+						y=tmp;
+						x = wid-x;
+					}
+					break;
+				case 1:
+					if(lcd_rotation == 0)
+					{
+						x = wid-x;
+					}
+					else if(lcd_rotation == 1)
+					{
+						uint16_t tmp;
+						tmp = x;
+						x=y;
+						y=tmp;
+					}
+					else if(lcd_rotation == 2)
+					{
+						y = heig - y;
+					}
+					else if(lcd_rotation == 3)
+					{
+						uint16_t tmp;
+						tmp = x;
+						x=y;
+						y=tmp;
+						x = wid-x;
+						y = heig - y;
+					}
+					break;
+				case 2:
+					if(lcd_rotation == 0)
+					{
+						x = wid-x;
+						y = heig - y;
+					}
+					else if(lcd_rotation == 1)
+					{
+						uint16_t tmp;
+						tmp = x;
+						x=y;
+						y=tmp;
+						x = wid-x;
+					}
+					else if(lcd_rotation == 2)
+					{
+						break;
+					}
+					else if(lcd_rotation == 3)
+					{
+						uint16_t tmp;
+						tmp = x;
+						x=y;
+						y=tmp;
+						y = heig - y;
+					}
+					break;
+				case 3:
+					if(lcd_rotation == 0)
+					{
+						y = heig - y;
+					}
+					else if(lcd_rotation == 1)
+					{
+						uint16_t tmp;
+						tmp = x;
+						x=y;
+						y=tmp;
+						x = wid-x;
+						y = heig - y;
+					}
+					else if(lcd_rotation == 2)
+					{
+						x = wid-x;;
+					}
+					else if(lcd_rotation == 3)
+					{
+						uint16_t tmp;
+						tmp = x;
+						x=y;
+						y=tmp;
+					}
+					break;
+				default:
+					break;
 			}
 	 	}
 		if((touch_statue&TP_PRES_DOWN)==0)
@@ -256,6 +344,16 @@ void LCDWIKI_TOUCH::TP_Set_Rotation(uint8_t val)
 uint8_t LCDWIKI_TOUCH::TP_Get_Rotation(void) const
 {
 	return touch_rotation;
+}
+
+void LCDWIKI_TOUCH::LCD_Set_Rotation(uint8_t val)
+{
+	lcd_rotation = val;
+}
+
+uint8_t LCDWIKI_TOUCH::LCD_Get_Rotation(void) const
+{
+	return lcd_rotation;
 }
 
 void LCDWIKI_TOUCH::TP_Set_State(uint8_t val)
